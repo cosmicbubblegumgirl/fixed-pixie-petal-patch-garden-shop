@@ -6,6 +6,12 @@ import './App.css';
 
 const money = (value) => `R${value.toFixed(2)}`;
 
+const resolvePublicAsset = (url) => {
+  if (typeof url !== 'string') return url;
+  if (!url.startsWith('/')) return url;
+  return `${import.meta.env.BASE_URL}${url.slice(1)}`;
+};
+
 const getRoute = () => {
   const hash = window.location.hash.replace('#', '');
   if (hash === 'products' || hash === 'cart') return hash;
@@ -140,7 +146,7 @@ function PlantModal({ plant, onClose, onAdd, cartMap }) {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose} aria-label="Close modal">×</button>
         <div className="modal-image-container">
-          <img src={plant.realImage} alt={plant.name} className="modal-image" />
+          <img src={resolvePublicAsset(plant.realImage)} alt={plant.name} className="modal-image" />
         </div>
         <div className="modal-info">
           <h2>{plant.name}</h2>
@@ -204,7 +210,7 @@ function ProductPage({ groupedProducts, cartMap, onAdd, onGoToCart, cartCount, c
                 <article key={item.id} className="product-card">
                   <button className="card-image-toggle" onClick={() => toggleCardPhoto(item.id)} aria-label={`Toggle real photo for ${item.name}`}>
                     <img
-                      src={showRealPhoto ? item.realImage : item.image}
+                      src={showRealPhoto ? resolvePublicAsset(item.realImage) : item.image}
                       alt={item.name}
                       className={showRealPhoto ? 'is-real-photo' : ''}
                       onError={(e) => {
